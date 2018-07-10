@@ -1,6 +1,8 @@
 import os
 import tornado.websocket
 import streaming_manager
+import json
+
 
 class AudioHandler( tornado.websocket.WebSocketHandler ):
     
@@ -8,11 +10,15 @@ class AudioHandler( tornado.websocket.WebSocketHandler ):
         self.streamer = None
         print( 'new connection' )
 
+    def respond(self, msg):
+        self.write_message(msg)
+
     def on_message(self, data) :
         if 'm:' == str( data[0] + data[1] ) :
             rate, is_encoded, op_rate, op_frm_dur = [int(i) for i in data[2:].split(',')]
             self.rate = rate
-            self.streamer = streaming_manager.StreamingManager(rate)
+            self.streamer = streaming_manager.StreamingManager(rate, "us_ar.h5", self.respond)
+            self.respond(json.dumps(["American", "Arabic"]))
         else:
             self.streamer.register_data(data)
 

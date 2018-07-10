@@ -4,14 +4,16 @@ from python_speech_features import mfcc
 import wave
 import models
 import keras.models
+import json
 
 class StreamingManager:
-    def __init__(self, sr, model_path, start_sec_thresh=3, reset_sec_thresh=8):
+    def __init__(self, sr, model_path, resp_func, start_sec_thresh=3, reset_sec_thresh=8):
         self.buff = []
         self.sr = sr
         self.start_thresh = start_sec_thresh
         self.reset_thresh = reset_sec_thresh
         self.model = keras.models.load_model(model_path)
+        self.respond = resp_func
 
     def get_buff_secs(self):
         return len(self.buff) / self.sr
@@ -53,4 +55,12 @@ class StreamingManager:
         x = np.array(x)
         x = x.reshape((x.shape[0], x.shape[2], x.shape[1]))
 
-        print("didn't crash :)")
+        ys = self.model.predict(x)
+        pred_class = np.argmax(ys, axis=1)
+        un, counts = np.unique(pred_class, return_counts=True)
+        y = un[np.argmax(counts)]
+
+        class_probs = np.mean(ys, axis=0)
+
+        self.respond("%d;%s" % (y, json.dumps(class_probs.tolist())))
+        print("%d, %s" % (y, str(counts)))

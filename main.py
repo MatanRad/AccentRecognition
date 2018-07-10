@@ -31,7 +31,7 @@ y_test_hot = keras.utils.to_categorical(y_test, num_classes)
 model = models.Conv1D_2_class((59, 13), 2)
 
 model.fit(x_train, y_train_hot, epochs=30, batch_size=512, validation_data=(x_test, y_test_hot))
-
+model.save("us_ar.h5")
 print(model.evaluate(x_test, y_test_hot))
 
 y_pred = model.predict_classes(x_test)
