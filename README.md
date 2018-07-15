@@ -15,6 +15,8 @@ The modules can be automatically installed using _pip_ and _bash/batch_ as follo
 pip install -r requirements.txt
 ~~~~~
 
+##### Please note that if GPU access is available, it is recommended to install the GPU version of tensorflow: https://www.tensorflow.org/install/
+
 ## General Overview
 The data used for this dataset is the [Speech Accent Archive](http://accent.gmu.edu/) (can also be found at [Kaggle](https://www.kaggle.com/rtatman/speech-accent-archive)).
 
@@ -35,7 +37,7 @@ After data has been converted to .wav format our code is ready to be executed.
 ###### All Parameters (such as file paths) in our code will generally be at the top.
 
 ## How To Run
-In order to train a network on accents, run _main.py_.
+In order to train a network on accents, run _main.py_ after setting the correct parameters and paths in it. (Add _speakers_all.csv_ from the dataset to the same folder as this file).
 To configure which accents to use, edit the "_countires_" parameter and the "*native_langs*" so that each country is a name of a country as in the original dataset. And each item in *native_langs* is an array of native languages we want to use.
 
 For example, for training on American vs Mandarin and Cantonese (combined) we can do:
