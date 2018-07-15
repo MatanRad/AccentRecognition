@@ -7,16 +7,19 @@ import _pickle as pickle
 from python_speech_features import mfcc
 
 
+# downsamples a given signal to a certain rate.
 def downsample(sig, rate, outrate=8000):
     down_sig = librosa.core.resample(sig, rate, outrate, scale=True)
     down_sig = np.ceil(down_sig * np.iinfo(np.int16).max)
 
     return down_sig, outrate
 
+# loads a file and downsamples it
 def load_and_downsample(filename, outrate=8000, inrate=16000):
     (sig, rate) = librosa.load(filename, mono=True, sr=inrate)
     return downsample(sig, rate, outrate)
 
+# standardize the audio files and pad them.
 def get_standard_length(sig, n_samps=240000, sr=8000):
     normed_sig = librosa.util.fix_length(sig, int(n_samps))
     normed_sig = (normed_sig - np.mean(normed_sig)) / np.std(normed_sig)
@@ -27,6 +30,8 @@ def load_standard_length(filename, n_samps=240000, sr=8000):
     down_sig, rate = load_and_downsample(filename, outrate=sr)
     return get_standard_length(down_sig, n_samps, sr)
 
+
+# Gets a dictionary from file name to country.
 def get_files_country_dict(countries, native_langs):
     files = {}
 
@@ -43,7 +48,15 @@ def get_files_country_dict(countries, native_langs):
                 files[row[filename_i] + ".wav"] = countries.index(row[country_i])
     return files
 
-# for input wav file outputs (13, 2999) mfcc np array
+# loads the dataset from _folder_
+# folder - the folder that contains the .wav files
+# countries - array of countries we want to load data from
+# native_langs - array of arrays. each array corresponds to the country with the same index and contains a list of
+#   all native languages we want to load
+# sr - sample rate
+# num_splits - number of splits to make in the audio file
+# num_secs - the number of seconds we want to pad our audio files to
+# equal_labels - do we want each label to have the same amount of data?
 def make_normed_split_mfcc(folder, countries, native_langs, sr=8000, num_splits=5, num_secs=30, equal_labels=False):
     lst = []
     y = []
@@ -84,6 +97,16 @@ def make_normed_split_mfcc(folder, countries, native_langs, sr=8000, num_splits=
 
     return lst, y
 
+# loads a pre-saved dataset file in _file_ and if it doesn't exist, calculate it.
+# file - the file in which the dataset is saved
+# folder - the folder that contains the .wav files
+# countries - array of countries we want to load data from
+# native_langs - array of arrays. each array corresponds to the country with the same index and contains a list of
+#   all native languages we want to load
+# sr - sample rate
+# num_splits - number of splits to make in the audio file
+# num_secs - the number of seconds we want to pad our audio files to
+# equal_labels - do we want each label to have the same amount of data?
 def load_dataset_file(file, folder, countries, native_langs, sr=8000, num_splits=5, num_secs=30, equal_labels=False):
     if os.path.isfile(file):
         with open(file, "rb") as f:
@@ -95,6 +118,7 @@ def load_dataset_file(file, folder, countries, native_langs, sr=8000, num_splits
             pickle.dump((x,y), f)
         return x, y
 
+# Normalize x so that the minimum value is 0 and the maximum is 1.
 def min_max_norm(x):
     min = np.min(x)
     max = np.max(x)

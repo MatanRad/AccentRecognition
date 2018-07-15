@@ -1,3 +1,4 @@
+// Proccessor for opus encoding
 var OpusEncoderProcessor = function( wsh )
 {
     this.wsh = wsh;
@@ -10,6 +11,7 @@ var OpusEncoderProcessor = function( wsh )
     this.opusEncoder = new OpusEncoder( this.opusRate, 1, 2049, this.opusFrameDur );
 }
 
+// encode opus audio
 OpusEncoderProcessor.prototype.onAudioProcess = function( e )
 {
     if( isRecording )
@@ -37,8 +39,10 @@ OpusEncoderProcessor.prototype.onAudioProcess = function( e )
     }
 }
 
+// define media handler for mic input
 var MediaHandler = function( audioProcessor )
 {
+    // create new audio context
     var context = new (window.AudioContext||window.webkitAudioContext)();
     if( !context.createScriptProcessor )
 	context.createScriptProcessor = context.createJavaScriptNode;
@@ -51,7 +55,8 @@ var MediaHandler = function( audioProcessor )
 
     //initialize mic
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-    
+
+    // define context and processor to class
     this.context = context;
     this.audioProcessor = audioProcessor;
     var userMediaConfig = {

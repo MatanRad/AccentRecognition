@@ -3,6 +3,7 @@ var wsh = new WebSocket( 'ws://127.0.0.1:8888/ws' );
 
 var countries = null;
 
+// Shows probabilities for each class
 function BuildClassProbs(probs)
 {
     var s = "";
@@ -13,9 +14,11 @@ function BuildClassProbs(probs)
     document.getElementById("probs").innerHTML = s;
 }
 
+// On receive message from stream websocket
 function onWsMessage( msg )
 { 
     console.log(msg.data);
+    // if countries is null we need to initialize our probabilities and countries. Also display placeholder dots.
     if (countries != null)
     {
         var y;
@@ -42,10 +45,12 @@ function onWsMessage( msg )
     }
 }
 
+// define media handler for mic input.
 wsh.onmessage = onWsMessage;
 var ap = new OpusEncoderProcessor( wsh );
 var mh = new MediaHandler( ap );
 
+// send the settings our code is running with to the client.
 function sendSettings()
 {
 	encode = 0;
@@ -59,6 +64,7 @@ function sendSettings()
     wsh.send( msg );
 }
 
+// start recording mic input
 function startRecord()
 {
     document.getElementById( "record").innerHTML = "Stop";
@@ -68,6 +74,7 @@ function startRecord()
     working = true;
 }
 
+// pause mic input
 function stopRecord()
 {
     isRecording  = false;
@@ -76,6 +83,7 @@ function stopRecord()
     working = false;
 }
 
+// toggle mic input.
 function toggleRecord()
 {
     if( isRecording )

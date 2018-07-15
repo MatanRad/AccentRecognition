@@ -6,6 +6,7 @@ from keras.layers.normalization import BatchNormalization
 from keras.layers.convolutional import Convolution1D, MaxPooling1D, Conv2D, MaxPooling2D
 
 
+# Basic LSTM network. with counts being an array of numbers of neurons in each layer.
 def LSTM(input_shape, nb_classes, counts=[64,64], dropout=0.25, optimizer='adam', loss='categorical_crossentropy'):
     model = Sequential()
 
@@ -19,7 +20,6 @@ def LSTM(input_shape, nb_classes, counts=[64,64], dropout=0.25, optimizer='adam'
 
     model.add(Dropout(dropout))
 
-    # squash output onto number of classes in probability space
     model.add(Dense(nb_classes, activation='softmax'))
 
     model.compile(loss=loss, optimizer=optimizer, metrics=["accuracy"])
@@ -27,6 +27,7 @@ def LSTM(input_shape, nb_classes, counts=[64,64], dropout=0.25, optimizer='adam'
     return model
 
 
+# Basic CNN with 1-dimensional convolutions and 2 classes for classification
 def Conv1D_2_class(input_shape, nb_classes, nb_filter=64, dropout=0.25, optimizer='rmsprop', loss='binary_crossentropy'):
     model = Sequential()
 
@@ -66,6 +67,7 @@ def Conv1D_2_class(input_shape, nb_classes, nb_filter=64, dropout=0.25, optimize
 
     return model
 
+# the cifar10 network from Keras' examples
 def cifar10_net(input_shape, nb_classes, optimizer='rmsprop', loss='binary_crossentropy'):
     activ = "relu"
     model = Sequential()
