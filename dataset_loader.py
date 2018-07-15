@@ -51,8 +51,7 @@ def get_files_country_dict(countries, native_langs):
 # loads the dataset from _folder_
 # folder - the folder that contains the .wav files
 # countries - array of countries we want to load data from
-# native_langs - array of arrays. each array corresponds to the country with the same index and contains a list of
-#   all native languages we want to load
+# native_langs - array of native languages we want to use (as in original dataset).
 # sr - sample rate
 # num_splits - number of splits to make in the audio file
 # num_secs - the number of seconds we want to pad our audio files to
@@ -101,8 +100,7 @@ def make_normed_split_mfcc(folder, countries, native_langs, sr=8000, num_splits=
 # file - the file in which the dataset is saved
 # folder - the folder that contains the .wav files
 # countries - array of countries we want to load data from
-# native_langs - array of arrays. each array corresponds to the country with the same index and contains a list of
-#   all native languages we want to load
+# native_langs - array of native languages we want to use (as in original dataset).
 # sr - sample rate
 # num_splits - number of splits to make in the audio file
 # num_secs - the number of seconds we want to pad our audio files to
